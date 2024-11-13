@@ -352,8 +352,7 @@ button {
   color: white;
   background: linear-gradient(50deg, #42a57f, #7dc75f);
 }
-
-/* .profile-button {
+ .profile-button {
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -379,7 +378,7 @@ button {
 .profile-menu p {
     margin: 0 0 10px;
     font-size: 14px;
-    color: white;
+    color: black;
 }
 .profile-menu p strong {
     display: inline-block;
@@ -397,7 +396,7 @@ button {
 }
 .profile-menu button:hover {
     background-color: #c82333;
-} */
+} 
 
 #sec2 {
   /* display: flex; */

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import FirstPage from '../components/FirstPage';
 import BottomNavbar from '../components/BottomNavbar';
 const LandingPage = () => {
-  const [isPopupOpen, setIsPopupOpen] = useState(true);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupType, setPopupType] = useState('login');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
@@ -68,14 +68,13 @@ const LandingPage = () => {
   };
   const handleRegister = async (
     name,
-    organization,
     mobile,
     email,
     username,
     password
   ) => {
     try {
-      await register(name, organization, mobile, email, username, password);
+      await register(name, mobile, email, username, password);
       setIsPopupOpen(false);
     } catch (error) {
       console.error('Error during registration:', error);
@@ -141,7 +140,7 @@ const LandingPage = () => {
                   >
                     {/* {userDetails.name[0]} */}
                   </button>
-                  {/* <p>Hey {userDetails.name},</p> */}
+                  { <p>Hey {userDetails.name},</p> }
                 </div>
                 {profileMenuOpen && userDetails && (
                   <div className="profile-menu">
@@ -153,9 +152,6 @@ const LandingPage = () => {
                     </button>
                     <p>
                       <strong>Name:</strong> {userDetails.name}
-                    </p>
-                    <p>
-                      <strong>Organization:</strong> {userDetails.organization}
                     </p>
                     <p>
                       <strong>Email:</strong> {userDetails.email}

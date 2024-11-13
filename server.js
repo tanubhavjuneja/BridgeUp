@@ -10,8 +10,8 @@ const PORT = process.env.PORT || 80;
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'root',
-    database: 'event_management',
+    password: 'idkthepassword',
+    database: 'event',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -51,13 +51,13 @@ app.post('/login', async (req, res) => {
     }
 });
 app.post('/register', async (req, res) => {
-    const { name, organization, mobile, email, username, password } = req.body;
+    const { name, mobile, email, username, password } = req.body;
     try {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const [rows] = await promisePool.query(
-            'INSERT INTO users (name, organization, mobile, email, username, password) VALUES (?, ?, ?, ?, ?, ?)',
-            [name, organization, mobile, email, username, hashedPassword]
+            'INSERT INTO users (name,  mobile, email, username, password) VALUES (?, ?, ?, ?, ?, ?)',
+            [name, mobile, email, username, hashedPassword]
         );
         res.status(201).json({ message: 'User registered successfully', userId: rows.insertId });
     } catch (error) {
@@ -124,7 +124,6 @@ app.get('/user', async (req, res) => {
         res.json({
             id: user.id,
             name: user.name,
-            organization: user.organization,
             mobile: user.mobile,
             email: user.email,
             username: user.username,
@@ -135,11 +134,32 @@ app.get('/user', async (req, res) => {
     }
 });
 app.get('/list_events', async (req, res) => {
+    const { city, footfall, eventDate, cost } = req.query;
+    console.log("/list events",city,footfall,eventDate,cost);
     try {
-        const [rows] = await promisePool.query('SELECT * FROM events');
-        res.json(rows);
+        let query = "SELECT * FROM events WHERE 1=1";
+        const values = [];
+        if (city) {
+            query += " AND city = ?";
+            values.push(city);
+        }
+        if (footfall) {
+            const [minFootfall, maxFootfall] = footfall.split('-');
+            query += " AND expected_crowd BETWEEN ? AND ?";
+            values.push(minFootfall, maxFootfall);
+        }
+        if (eventDate) {
+            query += " AND date = ?";
+            values.push(eventDate);
+        }
+        if (cost) {
+            query += " AND budget_requirement <= ?";
+            values.push(cost);
+        }
+        const [events] = await promisePool.query(query, values);
+        res.json(events);
     } catch (error) {
-        console.error('Database error:', error);
+        console.error('Error fetching events:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
