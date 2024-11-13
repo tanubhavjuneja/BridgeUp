@@ -1,0 +1,45 @@
+color codes used:
+
+for button: linear gradient(51AFFE, 0B60F4)
+
+
+font styles:
+
+
+
+
+box-shadow: rgba(17, 12, 46, 0.15) 0px 10px 60px 0px;
+
+.roboto-condensed-<uniquifier> {
+  font-family: "Roboto Condensed", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+}
+
+.inter-<uniquifier> {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+}
+
+
+By proceeding, you agree to MakeMyTrip's  Privacy Policy, User Agreement and T&Cs (below login page)
+
+#4A4A4A grey shade
+#9B9B9B blur login faded shade
+#9B9B9B disabled (not in use) login button shade
+
+
+npm i --save @fortawesome/free-solid-svg-icons
+npm i --save @fortawesome/free-regular-svg-icons
+npm i --save @fortawesome/free-brands-svg-icons
+
+
+{event.event_name}
+{event.event_organizer}
+{event.college}
+{event.budget_requirement}
+{event.date}
+{event.expected_crowd}

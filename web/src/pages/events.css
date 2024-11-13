@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+#event-page {
+  background-color: #ffffff;
+  min-height: 400vh;
+}
+
+#filter-search {
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  height: 9.9rem;
+  background: linear-gradient(#061626 40%, #164170);
+}
+
+#filter {
+  display: flex;
+  /* position: sticky;
+  top: 0%; */
+  z-index: 100;
+  padding-left: 50px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background-color: #061626;
+}
+#filter button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  margin-top: 0.7%;
+  margin-left: 7%;
+  border: none;
+  color: white;
+  height: 45px;
+  font-weight: bold;
+  width: 14%;
+  font-size: 20px;
+  /* padding: 0px !important; */
+  background: linear-gradient(90deg, #51affe, #0b60f4);
+}
+.filters {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  /* align-items: center; */
+  padding-left: 15px;
+  width: 15%;
+  border-radius: 0.6rem;
+  background-color: #223345;
+  margin-top: 0.625rem;
+  margin-left: 0.625rem;
+}
+.filtername {
+  font-size: 16px;
+  color: #0084ff;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.filters-res {
+  color: white;
+  margin-top: 0px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+#result {
+  font-size: 25px;
+  margin-left: 65px;
+  position: relative;
+  top: 17%;
+}
+#blue-color {
+  margin-bottom: 2%;
+  width: 100%;
+  background-color: #daf8fe;
+  height: 2rem;
+  box-shadow: rgba(17, 12, 46, 0.15) 0px 10px 60px 0px;
+  border-bottom: 2px solid #c4d7e6;
+}
+
+.event-card {
+  display: flex;
+  margin-bottom: 2%;
+  border: 1px solid #e7e7e7;
+  border-radius: 5px;
+  height: 40vh;
+  width: 70%;
+  margin-left: 10%;
+}
+.event-card:hover {
+  /* color: #0084ff; */
+  border: 1px solid #0084ff;
+}
+#part-1 {
+  padding-top: 40px;
+  padding-left: 20px;
+}
+#event-pic {
+  border-radius: 5px;
+  width: 80%;
+  max-width: 800px;
+  height: auto; /* Maintains aspect ratio */
+  overflow: hidden; /* Ensures no overflow */
+}
+
+#event-pic img {
+  width: 100%; /* Image scales to fit the container width */
+  height: auto; /* Maintains the image's aspect ratio */
+  display: block; /* Removes extra space below the image */
+}
+
+#part-2 {
+  width: 60%;
+  padding-top: 2%;
+}
+#part-2 h1 {
+  text-transform: uppercase;
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+#location {
+  display: flex;
+}
+#location .details {
+  font-size: 18px;
+}
+#location .details:nth-child(1) {
+  padding-right: 5px;
+  color: #0084ff;
+  font-weight: bold;
+}
+#location .details:nth-child(2) {
+  border-left: 2px solid black;
+  padding-left: 4px;
+  color: #4a4a4a;
+}
+#date {
+  font-size: 18px;
+  color: #4a4a4a;
+  margin-bottom: 0px;
+  margin-top: 28px;
+}
+#date span {
+  font-weight: bold;
+}
+.size-11 {
+  color: #4a4a4a;
+  font-size: 16px;
+  font-weight: normal;
+}
+#time {
+  margin-top: 4px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: bold;
+}
+#bf {
+  display: flex;
+  margin-top: 28px;
+}
+#bf .details {
+  display: flex;
+  width: 43%;
+  font-size: 18px;
+  font-weight: bold;
+  color: #4a4a4a;
+  margin-top: 5px;
+}
+#bf .details p {
+  margin: 2px 0px;
+}
+#bf .details .op {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 4px;
+}
+#footfall {
+  border-left: 2px solid black;
+  padding-left: 8px;
+}
+#part-3 {
+  width: 30%;
+  border-left: 1px solid #e7e7e7;
+  padding: 2.7% 2% 0 1%;
+}
+#description {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+#desc-details {
+  width: 200px; /* Set your desired width */
+  display: -webkit-box; /* Use box model for line clamping */
+  -webkit-box-orient: vertical; /* Set vertical orientation */
+  -webkit-line-clamp: 3; /* Number of lines to display before truncating */
+  overflow: hidden; /* Hide overflowed content */
+  text-overflow: ellipsis; /* Add "..." */
+  cursor: pointer; /* Makes the container look clickable */
+  margin-top: 0px;
+}
+.heart-icon {
+  position: relative;
+  top: 50%;
+  left: 90%;
+}
+
+.heart-icon.red {
+  color: red;
+  animation: pop 0.3s ease;
+}
+.heart-icon.default {
+  color: black;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5); /* Scale up */
+  }
+  100% {
+    transform: scale(1); /* Scale back down */
+  }
+}
