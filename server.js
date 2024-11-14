@@ -56,7 +56,7 @@ app.post('/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const [rows] = await promisePool.query(
-            'INSERT INTO users (name,  mobile, email, username, password) VALUES (?, ?, ?, ?, ?, ?)',
+            'INSERT INTO users (name,  mobile, email, username, password) VALUES (?, ?, ?, ?, ?)',
             [name, mobile, email, username, hashedPassword]
         );
         res.status(201).json({ message: 'User registered successfully', userId: rows.insertId });
@@ -135,7 +135,7 @@ app.get('/user', async (req, res) => {
 });
 app.get('/list_events', async (req, res) => {
     const { city, footfall, eventDate, cost } = req.query;
-    console.log("/list events",city,footfall,eventDate,cost);
+    console.log("/list events", city, footfall, eventDate, cost);
     try {
         let query = "SELECT * FROM events WHERE 1=1";
         const values = [];
@@ -145,16 +145,24 @@ app.get('/list_events', async (req, res) => {
         }
         if (footfall) {
             const [minFootfall, maxFootfall] = footfall.split('-');
-            query += " AND expected_crowd BETWEEN ? AND ?";
-            values.push(minFootfall, maxFootfall);
+            if (minFootfall && maxFootfall) {
+                query += " AND expected_crowd BETWEEN ? AND ?";
+                values.push(minFootfall, maxFootfall);
+            }
         }
         if (eventDate) {
-            query += " AND date = ?";
-            values.push(eventDate);
+            const [startDate, endDate] = eventDate.split('-');
+            if (startDate && endDate) {
+                query += " AND date BETWEEN ? AND ?";
+                values.push(startDate, endDate);
+            }
         }
         if (cost) {
-            query += " AND budget_requirement <= ?";
-            values.push(cost);
+            const [minCost, maxCost] = cost.split('-');
+            if (minCost && maxCost) {
+                query += " AND budget_requirement BETWEEN ? AND ?";
+                values.push(minCost, maxCost);
+            }
         }
         const [events] = await promisePool.query(query, values);
         res.json(events);
@@ -163,6 +171,7 @@ app.get('/list_events', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
 app.get('/event/:id', async (req, res) => {
     const eventId = req.params.id;
     try {

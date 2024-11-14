@@ -21,8 +21,11 @@ const LandingPage = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           setUserDetails(data);
+          const element = document.querySelector('#name-p');
+          if (element) {
+            element.textContent = 'Hey ${userDetails.name},';
+        }
         })
         .catch((error) => console.error('Error fetching user details:', error));
     }
@@ -121,7 +124,6 @@ const LandingPage = () => {
 
   // Check if the Login button should be enabled
   const isLoginEnabled = username.length > 0 && password.length >= 6;
-
   return (
     <>
       <section id="overlay1">
@@ -130,7 +132,6 @@ const LandingPage = () => {
           <nav className="navbar">
             {/* <Link to="/events">Events</Link>
             <Link to="/sponsors">Sponsors</Link> */}
-
             {isAuthenticated ? (
               <>
                 <div id="profile">
@@ -140,7 +141,7 @@ const LandingPage = () => {
                   >
                     {/* {userDetails.name[0]} */}
                   </button>
-                  { <p>Hey {userDetails.name},</p> }
+                  { <p id="name-p">Hey ,</p> }
                 </div>
                 {profileMenuOpen && userDetails && (
                   <div className="profile-menu">
@@ -354,9 +355,6 @@ const LandingPage = () => {
                   onClick={() =>
                     handleRegister(
                       document.getElementById('register-name').value,
-                      document.getElementById('event-name').value,
-
-                      document.getElementById('register-organization').value,
                       document.getElementById('register-mobile').value,
                       document.getElementById('register-email').value,
                       document.getElementById('register-username').value,
