@@ -21,11 +21,11 @@ export const useAuth = () => {
       throw new Error('Invalid login credentials');
     }
   };
-  const register = async (name, organization, mobile, email, username, password) => {
+  const register = async (name, mobile, email, username, password) => {
     const response = await fetch('/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, organization, mobile, email, username, password }),
+      body: JSON.stringify({ name, mobile, email, username, password }),
     });
     const data = await response.json();
     if (data.message === 'User registered successfully') {
