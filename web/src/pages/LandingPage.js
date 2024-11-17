@@ -5,6 +5,7 @@ import './style.css';
 import { Link } from 'react-router-dom';
 import FirstPage from '../components/FirstPage';
 import BottomNavbar from '../components/BottomNavbar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const LandingPage = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupType, setPopupType] = useState('login');
@@ -21,11 +22,8 @@ const LandingPage = () => {
       })
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           setUserDetails(data);
-          const element = document.querySelector('#name-p');
-          if (element) {
-            element.textContent = 'Hey ${userDetails.name},';
-        }
         })
         .catch((error) => console.error('Error fetching user details:', error));
     }
@@ -71,13 +69,14 @@ const LandingPage = () => {
   };
   const handleRegister = async (
     name,
+    organization,
     mobile,
     email,
     username,
     password
   ) => {
     try {
-      await register(name, mobile, email, username, password);
+      await register(name, organization, mobile, email, username, password);
       setIsPopupOpen(false);
     } catch (error) {
       console.error('Error during registration:', error);
@@ -123,7 +122,22 @@ const LandingPage = () => {
   };
 
   // Check if the Login button should be enabled
-  const isLoginEnabled = username.length > 0 && password.length >= 6;
+  const isLoginEnabled = username.length > 0 && password.length >= 8;
+
+  function checkFormCompletion() {
+    const fields = [
+      document.getElementById('register-name').value,
+      document.getElementById('register-mobile').value,
+      document.getElementById('register-email').value,
+      document.getElementById('register-username').value,
+      document.getElementById('register-password').value,
+    ];
+    let allFieldsFilled = false;
+
+    allFieldsFilled = fields.every((field) => field.trim() !== '');
+    console.log(allFieldsFilled);
+    document.getElementById('register-button').disabled = !allFieldsFilled;
+  }
   return (
     <>
       <section id="overlay1">
@@ -132,6 +146,7 @@ const LandingPage = () => {
           <nav className="navbar">
             {/* <Link to="/events">Events</Link>
             <Link to="/sponsors">Sponsors</Link> */}
+
             {isAuthenticated ? (
               <>
                 <div id="profile">
@@ -141,7 +156,7 @@ const LandingPage = () => {
                   >
                     {/* {userDetails.name[0]} */}
                   </button>
-                  { <p id="name-p">Hey ,</p> }
+                  {/* <p>Hey {userDetails.name},</p> */}
                 </div>
                 {profileMenuOpen && userDetails && (
                   <div className="profile-menu">
@@ -153,6 +168,9 @@ const LandingPage = () => {
                     </button>
                     <p>
                       <strong>Name:</strong> {userDetails.name}
+                    </p>
+                    <p>
+                      <strong>Organization:</strong> {userDetails.organization}
                     </p>
                     <p>
                       <strong>Email:</strong> {userDetails.email}
@@ -167,9 +185,14 @@ const LandingPage = () => {
             ) : (
               <button
                 className="button-grad"
+                id="login-but1"
                 onClick={() => handlePopupToggle('login')}
               >
-                Login or Create Account ⌵
+                Login or Create Account
+                <FontAwesomeIcon
+                  icon="fa-solid fa-caret-down"
+                  className="caret-down"
+                />
               </button>
             )}
 
@@ -303,6 +326,7 @@ const LandingPage = () => {
                   id="register-name"
                   placeholder="Name"
                   required
+                  onInput={checkFormCompletion}
                 />
                 {/* <input
                   className="login-fields"
@@ -325,6 +349,7 @@ const LandingPage = () => {
                   id="register-mobile"
                   placeholder="Contact No"
                   required
+                  onInput={checkFormCompletion}
                 />
                 <h2>Email</h2>
                 <input
@@ -333,6 +358,7 @@ const LandingPage = () => {
                   id="register-email"
                   placeholder="Email"
                   required
+                  onInput={checkFormCompletion}
                 />
                 <h2>Username</h2>
                 <input
@@ -341,6 +367,7 @@ const LandingPage = () => {
                   id="register-username"
                   placeholder="Username"
                   required
+                  onInput={checkFormCompletion}
                 />
                 <h2>Password</h2>
                 <input
@@ -349,12 +376,18 @@ const LandingPage = () => {
                   id="register-password"
                   placeholder="Password"
                   required
+                  onInput={checkFormCompletion}
                 />
                 <button
                   className="switch-button"
+                  id="register-button"
+                  disabled
                   onClick={() =>
                     handleRegister(
                       document.getElementById('register-name').value,
+                      document.getElementById('event-name').value,
+
+                      document.getElementById('register-organization').value,
                       document.getElementById('register-mobile').value,
                       document.getElementById('register-email').value,
                       document.getElementById('register-username').value,

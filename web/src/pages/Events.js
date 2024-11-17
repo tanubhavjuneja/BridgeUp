@@ -46,34 +46,6 @@ const Events = () => {
       .then((data) => setEvents(data))
       .catch((error) => console.error('Error fetching events:', error));
   }, []);
-  const handleSearch = () => {
-    /*const city = document.getElementById('cityInput').value;
-    const footfall = document.getElementById('footfallInput').value;
-    const eventDate = document.getElementById('eventDateInput').value;
-    const cost = document.getElementById('costInput').value;
-    console.log(city,footfall,eventDate,cost);*/
-    const city = 'Delhi';  // Hardcoded city
-    const footfall = '1000-5000';  // Hardcoded footfall range
-    const eventDate = '2024-11-15';  // Hardcoded event date
-    const cost = '10000'; 
-    const url = new URL('/list_events', window.location.origin);
-
-    // Append query parameters to the URL
-    if (city) url.searchParams.append('city', city);
-    if (footfall) url.searchParams.append('footfall', footfall);
-    if (eventDate) url.searchParams.append('eventDate', eventDate);
-    if (cost) url.searchParams.append('cost', cost);
-
-    fetch(url, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => setEvents(data))
-      .catch((error) => console.error('Error fetching events:', error));
-};
-
   const handlePopupToggle = () => {
     setIsPopupOpen(!isPopupOpen);
   };
@@ -142,24 +114,24 @@ const Events = () => {
         <button className="popup-button" onClick={() => handlePopupToggle()}>Add New Event</button> */}
       <div id="filter-search">
         <div id="filter">
-          <div className="filters" id="cityInput">
+          <div className="filters" id="city">
             <h1 className="filtername">CITY OR AREA ⌵</h1>
             <p className="filters-res">Delhi</p>
           </div>
-          <div className="filters" id="footfallInput">
+          <div className="filters" id="footfall">
             <h1 className="filtername">FOOTFALL ⌵</h1>
             <p className="filters-res">500-800</p>
           </div>
-          <div className="filters" id="eventDateInput">
+          <div className="filters" id="eventDate">
             <h1 className="filtername">EVENT DATE ⌵</h1>
-            <p className="filters-res">01-12-2024</p>
+            <p className="filters-res">Fri, 1 Nov 2024</p>
           </div>
-          <div className="filters" id="costInput">
+          <div className="filters" id="cost">
             <h1 className="filtername">COST ⌵</h1>
             <p className="filters-res">Below 2000</p>
           </div>
 
-          <button type="submit" onClick={handleSearch}>SEARCH</button>
+          <button type="submit">SEARCH</button>
         </div>
         {/* <p>Search Result</p> */}
         <h2 id="result">400 Events in Delhi</h2>
