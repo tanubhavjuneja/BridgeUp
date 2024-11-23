@@ -91,9 +91,55 @@ const Events = () => {
   const [isRed, setIsRed] = useState(false);
   const [isSolid, setIsSolid] = useState(false);
 
-  const handleClick = () => {
-    setIsRed(!isRed); // Toggle the color state on click
-    setIsSolid(!isSolid);
+  // const handleClick = (e) => {
+  //   setIsRed(!isRed); // Toggle the color state on click
+  //   setIsSolid(!isSolid);
+  // };
+  const today = new Date().toISOString().split('T')[0];
+  const handleDate = (e) => {
+    e.target.showPicker(); // Opens the date picker
+  };
+
+  //for saving an event
+  // const [selectedEventId, setSelectedEventId] = useState(null); // To store the selected event ID
+
+  // const handleClick = (eventId) => {
+  //   setSelectedEventId(eventId); // Store the ID of the clicked event
+  // };
+  const [savedEvents, setSavedEvents] = useState([]); // Store the saved event IDs
+
+  // Load saved events from localStorage when the component mounts
+  useEffect(() => {
+    const savedEventsFromStorage = localStorage.getItem('savedEvents');
+
+    // Check if there's anything in localStorage and if it's a valid array
+    if (savedEventsFromStorage) {
+      const parsedEvents = JSON.parse(savedEventsFromStorage);
+      if (Array.isArray(parsedEvents)) {
+        setSavedEvents(parsedEvents); // Only set saved events if they are in array format
+      }
+    }
+  }, []); // Ensures this runs only once when the component mounts
+
+  // Save the updated list of saved events to localStorage whenever it changes
+  useEffect(() => {
+    if (savedEvents.length > 0) {
+      localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
+    } else {
+      // If no events are saved, ensure savedEvents is cleared in localStorage
+      localStorage.removeItem('savedEvents');
+    }
+  }, [savedEvents]); // Ensures saved events are updated, and cleared when there are none.
+
+  const handleSaveEvent = (eventId) => {
+    // If event is already saved, remove it, else add it to saved list
+    if (savedEvents.includes(eventId)) {
+      setSavedEvents(savedEvents.filter((id) => id !== eventId)); // Remove event
+      console.log('removed: ', eventId);
+    } else {
+      console.log('saved: ', eventId);
+      setSavedEvents([...savedEvents, eventId]); // Add event
+    }
   };
 
   //our final page
@@ -116,25 +162,52 @@ const Events = () => {
         <div id="filter">
           <div className="filters" id="city">
             <h1 className="filtername">CITY OR AREA ⌵</h1>
-            <p className="filters-res">Delhi</p>
+            <input
+              className="filters-res"
+              type="text"
+              name="city"
+              id="city"
+              defaultValue="Delhi"
+            />
           </div>
           <div className="filters" id="footfall">
             <h1 className="filtername">FOOTFALL ⌵</h1>
-            <p className="filters-res">500-800</p>
+            <input
+              className="filters-res"
+              type="text"
+              name="search-footfall"
+              id="search-footfall"
+              defaultValue="1000"
+            />
           </div>
           <div className="filters" id="eventDate">
             <h1 className="filtername">EVENT DATE ⌵</h1>
-            <p className="filters-res">Fri, 1 Nov 2024</p>
+            <input
+              className="filters-res"
+              type="date"
+              name="event-date"
+              id="event-date"
+              onFocus={handleDate}
+              defaultValue={today}
+            />
           </div>
           <div className="filters" id="cost">
             <h1 className="filtername">COST ⌵</h1>
-            <p className="filters-res">Below 2000</p>
+            <input
+              className="filters-res"
+              type="number"
+              name="cost"
+              id="cost"
+              defaultValue="2000"
+            />
           </div>
 
           <button type="submit">SEARCH</button>
         </div>
         {/* <p>Search Result</p> */}
-        <h2 id="result">400 Events in Delhi</h2>
+        <h2 id="result">
+          <span>40</span> Events in <span>Delhi</span>
+        </h2>
       </div>
       <div id="blue-color"></div>
       <div className="main-content">
@@ -196,10 +269,16 @@ const Events = () => {
                   deleniti sed quae vitae eaque illum adipisci?
                 </p>
                 <FontAwesomeIcon
-                  className={`heart-icon ${isRed ? 'red' : 'default'}`}
-                  icon={isSolid ? faHeartSolid : faHeartRegular}
+                  className={`heart-icon ${
+                    savedEvents.includes(event.id) ? 'red' : 'default'
+                  }`}
+                  icon={
+                    savedEvents.includes(event.id)
+                      ? faHeartSolid
+                      : faHeartRegular
+                  }
                   size="xl"
-                  onClick={handleClick}
+                  onClick={() => handleSaveEvent(event.id)} // Toggle save/remove event
                 />
               </div>
 

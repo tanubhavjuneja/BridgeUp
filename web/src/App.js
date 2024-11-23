@@ -12,9 +12,29 @@ import {
   faCoffee,
   faHeart,
   faCircleCheck,
+  faCircleXmark,
+  faCaretDown,
+  faUser,
+  faAngleDown,
+  faEnvelope,
+  faPhone,
+  faArrowRight,
 } from '@fortawesome/free-solid-svg-icons';
 
-library.add(fab, faCheckSquare, faCoffee, faHeart, faCircleCheck);
+library.add(
+  fab,
+  faCheckSquare,
+  faCoffee,
+  faHeart,
+  faCircleCheck,
+  faCircleXmark,
+  faCaretDown,
+  faUser,
+  faAngleDown,
+  faEnvelope,
+  faPhone,
+  faArrowRight
+);
 
 const App = () => {
   return (

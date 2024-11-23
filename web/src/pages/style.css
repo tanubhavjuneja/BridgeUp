@@ -106,6 +106,7 @@ h2 {
 }
 .caret-down {
   margin-left: 10%;
+  color: white;
   /* font-size: 15px; */
 }
 .button-grad:hover {
@@ -344,43 +345,54 @@ button {
 }
 
 #profile {
+  width: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
+  /* margin-right: 0px; */
+  border-left: 3px dotted grey;
+}
+#angle-down {
+  color: white;
+  margin-left: 10%;
 }
 #profile p {
   color: white;
   font-weight: bold;
   margin-left: 10px;
-  font-size: 15px;
+  font-size: 14px;
+  text-transform: capitalize;
 }
 .profile-button {
+  text-transform: capitalize;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50px;
-  height: 40px;
-  width: 40px;
+  border-radius: 100px;
+  height: 35px;
+  width: 35px;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
   border: none;
   color: white;
   background: linear-gradient(50deg, #42a57f, #7dc75f);
 }
 
-.profile-button {
+/* .profile-button {
   background-color: #007bff;
   color: #fff;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-}
+} */
+
 .profile-menu {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  right: 5%;
+  /* top: 50%; */
+  /* right: 1%; */
+  /* transform: translate(-50%, -50%); */
   width: 250px;
   background-color: #fff;
   border: 1px solid #ddd;
@@ -389,14 +401,16 @@ button {
   z-index: 1000;
   padding: 15px;
   display: flex;
+  color: black;
   flex-direction: column;
 }
 .profile-menu p {
   margin: 0 0 10px;
-  font-size: 14px;
-  color: white;
+  font-size: 20px;
+  color: black;
 }
 .profile-menu p strong {
+  /* font-size: 18px; */
   display: inline-block;
   width: 120px;
   font-weight: bold;

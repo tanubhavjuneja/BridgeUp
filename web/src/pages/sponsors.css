@@ -1,0 +1,153 @@
+select option {
+  background: #fff;
+  color: #333;
+}
+select:hover {
+  border-color: #51affe;
+}
+
+/* Reset Styles */
+/* * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+} */
+
+/* Container for Sponsors */
+.main-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#sponsors-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Exactly 2 cards per row */
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+/* Sponsor Card Styling */
+.sponsor-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  border: 1px solid #e7e7e7;
+  align-items: center;
+  flex-direction: column;
+
+  width: 70%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Card Hover Effect */
+.sponsor-card:hover {
+  /* transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); */
+
+  border: 1px solid #0084ff;
+}
+
+/* Dynamic Heights for Staggered Look */
+.sponsor-card:nth-child(odd) {
+  /* grid-row: span 8; */
+  height: 500px;
+}
+.sponsor-card:nth-child(even) {
+  height: 500px;
+}
+
+.sponsor-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.sponsor-card p {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #666;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  #sponsors-container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .sponsor-card {
+    padding: 15px;
+  }
+}
+
+#sponsor-image {
+  width: 150px; /* Set the width of the circle */
+  height: 150px; /* Set the height of the circle */
+  border-radius: 50%; /* Make the container circular */
+  overflow: hidden; /* Hide any part of the image outside the circle */
+  display: flex; /* Center the image within the circle */
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #ddd; /* Optional: Add a border to the circle */
+}
+
+#sponsor-image img {
+  width: 100%; /* Scale the image to fit the circle */
+  height: 100%; /* Ensure the image covers the circle completely */
+  object-fit: cover; /* Crop the image to maintain aspect ratio */
+}
+
+#sponsor-name {
+  text-transform: uppercase;
+  font-size: 25px;
+  margin-bottom: 0px;
+}
+#sponsor-loc {
+  /* border-left: 2px solid black; */
+  margin-top: 8px;
+  padding-left: 4px;
+  color: #4a4a4a;
+  font-weight: normal;
+}
+
+#desc-details {
+  width: 100%;
+  margin-top: 18px;
+}
+
+.sponsor-heart-icon {
+  position: relative;
+  top: 30%;
+  left: 45%;
+}
+.sponsor-heart-icon.red {
+  color: red;
+  animation: pop 0.3s ease;
+}
+.sponsor-heart-icon.default {
+  color: black;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(3); /* Scale up */
+  }
+  100% {
+    transform: scale(1); /* Scale back down */
+  }
+}

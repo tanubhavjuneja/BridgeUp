@@ -51,14 +51,16 @@
 #filter-search {
   font-family: 'Inter', sans-serif;
   width: 100%;
+  /* position: sticky;
+  top: 0%; */
   height: 9.9rem;
   background: linear-gradient(#061626 40%, #164170);
 }
 
 #filter {
   display: flex;
-  /* position: sticky;
-  top: 0%; */
+  position: sticky;
+  top: 0%;
   z-index: 100;
   padding-left: 50px;
   padding-top: 5px;
@@ -80,6 +82,15 @@
   font-size: 20px;
   /* padding: 0px !important; */
   background: linear-gradient(90deg, #51affe, #0b60f4);
+}
+#filter button:hover {
+  background: linear-gradient(90deg, #51affe, #0b60f4);
+  -webkit-background-clip: text; /* Make the background clip to the text */
+  color: transparent; /* Make the text color transparent so the gradient shows through */
+  border: 2px solid white;
+}
+#filter button:hover {
+  background-color: white;
 }
 .filters {
   display: flex;
@@ -104,6 +115,20 @@
   margin-top: 0px;
   font-weight: bold;
   margin-bottom: 2px;
+  font-size: 16px;
+  background: none;
+  outline: none;
+  border: none;
+}
+.filter-res::placeholder {
+  background-color: transparent;
+  font-size: 15px;
+}
+input[type='date'] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
 }
 
 #result {
@@ -236,7 +261,8 @@
   width: 200px; /* Set your desired width */
   display: -webkit-box; /* Use box model for line clamping */
   -webkit-box-orient: vertical; /* Set vertical orientation */
-  -webkit-line-clamp: 3; /* Number of lines to display before truncating */
+  line-clamp: 3; /* Standard property */
+  -webkit-line-clamp: 3; /* WebKit-specific */
   overflow: hidden; /* Hide overflowed content */
   text-overflow: ellipsis; /* Add "..." */
   cursor: pointer; /* Makes the container look clickable */
@@ -244,7 +270,7 @@
 }
 .heart-icon {
   position: relative;
-  top: 50%;
+  top: 48%;
   left: 90%;
 }
 
@@ -261,7 +287,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.5); /* Scale up */
+    transform: scale(3); /* Scale up */
   }
   100% {
     transform: scale(1); /* Scale back down */

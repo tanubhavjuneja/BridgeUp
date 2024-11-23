@@ -157,7 +157,7 @@ export default function FirstPage() {
 
       <div
         className="form-container"
-        id="no1"
+        id="form1"
         style={{ display: visibleDivIndex === 0 ? 'block' : 'none' }}
       >
         <button className="close-popup" onClick={handleClosePopup}>
@@ -214,13 +214,14 @@ export default function FirstPage() {
           </div> */}
 
           <button type="submit" class="submit-btn">
-            Submit
+            <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
           </button>
         </form>
       </div>
 
       <div
         className="form-container"
+        id="form2"
         style={{ display: visibleDivIndex === 1 ? 'block' : 'none' }}
       >
         <button className="close-popup" onClick={handleClosePopup}>
@@ -294,6 +295,7 @@ export default function FirstPage() {
 
       <div
         className="form-container"
+        id="form3"
         style={{ display: visibleDivIndex === 2 ? 'block' : 'none' }}
       >
         <button className="close-popup" onClick={handleClosePopup}>
@@ -326,6 +328,7 @@ export default function FirstPage() {
 
       <div
         className="form-container"
+        id="form1"
         style={{ display: visibleDivIndex === 3 ? 'block' : 'none' }}
       >
         <button className="close-popup" onClick={handleClosePopup}>
@@ -369,6 +372,16 @@ export default function FirstPage() {
           </div>
           <div class="form-field">
             <input
+              type="number"
+              id="budget"
+              name="budget"
+              required
+              placeholder=" "
+            />
+            <label for="budget">Budget (in Rs.)</label>
+          </div>
+          <div class="form-field">
+            <input
               type="text"
               id="domain"
               name="domain"
@@ -386,6 +399,7 @@ export default function FirstPage() {
 
       <div
         className="form-container"
+        id="form2"
         style={{ display: visibleDivIndex === 4 ? 'block' : 'none' }}
       >
         <button className="close-popup" onClick={handleClosePopup}>
@@ -424,6 +438,7 @@ export default function FirstPage() {
 
       <div
         className="form-container"
+        id="form3"
         style={{ display: visibleDivIndex === 5 ? 'block' : 'none' }}
       >
         <button className="close-popup" onClick={handleClosePopup}>

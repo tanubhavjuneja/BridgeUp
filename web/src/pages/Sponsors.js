@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'; // Solid heart icon
+import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons'; // Regular heart icon
 import './style.css';
+import './sponsors.css';
 const Sponsors = () => {
   const [sponsors, setSponsors] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -61,8 +65,44 @@ const Sponsors = () => {
       console.error('Error adding sponsor:', error);
     }
   };
-  const handleSponsorClick = (sponsorId) => {
-    navigate(`/sponsors/${sponsorId}`);
+  // const handleSponsorClick = (sponsorId) => {
+  //   navigate(`/sponsors/${sponsorId}`);
+  // };
+
+  const [savedSponsors, setSavedSponsors] = useState([]); // Store the saved sponsor IDs
+
+  // Load saved sponsors from localStorage when the component mounts
+  useEffect(() => {
+    const savedSponsorsFromStorage = localStorage.getItem('savedSponsors');
+
+    // Check if there's anything in localStorage and if it's a valid array
+    if (savedSponsorsFromStorage) {
+      const parsedSponsors = JSON.parse(savedSponsorsFromStorage);
+      if (Array.isArray(parsedSponsors)) {
+        setSavedSponsors(parsedSponsors); // Only set saved sponsors if they are in array format
+      }
+    }
+  }, []); // Ensures this runs only once when the component mounts
+
+  // Save the updated list of saved sponsors to localStorage whenever it changes
+  useEffect(() => {
+    if (savedSponsors.length > 0) {
+      localStorage.setItem('savedSponsors', JSON.stringify(savedSponsors));
+    } else {
+      // If no sponsors are saved, ensure savedSponsors is cleared in localStorage
+      localStorage.removeItem('savedSponsors');
+    }
+  }, [savedSponsors]); // Ensures saved sponsors are updated, and cleared when there are none.
+
+  const handleSaveSponsor = (sponsorId) => {
+    // If sponsor is already saved, remove it, else add it to saved list
+    if (savedSponsors.includes(sponsorId)) {
+      setSavedSponsors(savedSponsors.filter((id) => id !== sponsorId)); // Remove sponsor
+      console.log('removed: ', sponsorId);
+    } else {
+      console.log('saved: ', sponsorId);
+      setSavedSponsors([...savedSponsors, sponsorId]); // Add sponsor
+    }
   };
   return (
     <div id="sponsor-page" style={{ width: '100%' }}>
@@ -86,7 +126,7 @@ const Sponsors = () => {
           <h2>Organization Name</h2>
         </div>
         <nav className="navbar">
-          <Link to="/events">Events</Link>
+          <Link to="/sponsors">Sponsors</Link>
           <Link to="/sponsors">Sponsors</Link>
           <Link to="/contact-us">Contact us</Link>
         </nav>
@@ -99,44 +139,78 @@ const Sponsors = () => {
         <div id="filter">
           <div className="filters" id="city">
             <h1 className="filtername">CITY OR AREA ⌵</h1>
-            <p className="filters-res">Delhi</p>
+            <input
+              className="filters-res"
+              type="text"
+              name="city"
+              id="city"
+              defaultValue="Delhi"
+            />
           </div>
           <div className="filters" id="footfall">
-            <h1 className="filtername">FOOTFALL ⌵</h1>
-            <p className="filters-res">500-800</p>
-          </div>
-          <div className="filters" id="eventDate">
-            <h1 className="filtername">EVENT DATE ⌵</h1>
-            <p className="filters-res">Fri, 1 Nov 2024</p>
-          </div>
-          <div className="filters" id="cost">
-            <h1 className="filtername">COST ⌵</h1>
-            <p className="filters-res">Below 2000</p>
+            <h1 className="filtername">DOMAIN ⌵</h1>
+            {/* <input
+              className="filters-res"
+              type="text"
+              name="domain"
+              id="domain"
+              defaultValue="Food"
+            /> */}
+            <select className="filters-res" id="domain" name="domain">
+              <option value="fashion">Fashion</option>
+              <option value="food">Food</option>
+              <option value="games">Games</option>
+            </select>
           </div>
 
           <button type="submit">SEARCH</button>
         </div>
         {/* <p>Search Result</p> */}
-        <h2 id="result">400 Events in Delhi</h2>
+        <h2 id="result">
+          <span>40</span> Sponsors in <span>Delhi</span>
+        </h2>
       </div>
+      <div id="blue-color"></div>
 
       <div className="main-content">
-        <h1>Sponsors</h1>
+        {/* <h1>Sponsors</h1>
         <button
           className="main-content button"
           onClick={() => setIsPopupOpen(true)}
         >
           Add New Sponsor
-        </button>
+        </button> */}
         <div id="sponsors-container">
           {sponsors.map((sponsor) => (
             <div
               key={sponsor.id}
               className="sponsor-card"
-              onClick={() => handleSponsorClick(sponsor.id)}
+              // onClick={() => handleSponsorClick(sponsor.id)}
             >
-              <h3>{sponsor.organization_name}</h3>
-              <p>
+              <div id="sponsor-image">
+                <img src="web\src\pages\assets\img1.jpg" alt="" />
+              </div>
+              <h3 id="sponsor-name">{sponsor.organization_name}</h3>
+              <h3 id="sponsor-loc">Delhi</h3>
+              <p className="size-11" id="desc-details">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo
+                consequuntur quasi quam fugiat impedit expedita culpa vel ipsum
+                voluptatibus exercitationem magni nesciunt itaque, deleniti sed
+                quae vitae eaque illum adipisci?
+              </p>
+              <FontAwesomeIcon
+                className={`sponsor-heart-icon ${
+                  savedSponsors.includes(sponsor.id) ? 'red' : 'default'
+                }`}
+                icon={
+                  savedSponsors.includes(sponsor.id)
+                    ? faHeartSolid
+                    : faHeartRegular
+                }
+                size="xl"
+                onClick={() => handleSaveSponsor(sponsor.id)} // Toggle save/remove sponsor
+              />
+              {/* <p>
                 <strong>Sponsorship Budget:</strong>{' '}
                 {sponsor.sponsorship_budget}
               </p>
@@ -147,12 +221,12 @@ const Sponsors = () => {
               <p>
                 <strong>Crowd Requirements:</strong>{' '}
                 {sponsor.crowd_requirements}
-              </p>
+              </p> */}
             </div>
           ))}
         </div>
       </div>
-      {isPopupOpen && (
+      {/* {isPopupOpen && (
         <div className="popup">
           <div className="popup-content">
             <button
@@ -193,7 +267,7 @@ const Sponsors = () => {
             <button onClick={handleAddSponsor}>Add Sponsor</button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

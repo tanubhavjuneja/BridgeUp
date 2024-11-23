@@ -67,16 +67,11 @@ const LandingPage = () => {
       console.error('Error during login:', error);
     }
   };
-  const handleRegister = async (
-    name,
-    organization,
-    mobile,
-    email,
-    username,
-    password
-  ) => {
+  const handleRegister = async (name, mobile, email, username, password) => {
     try {
-      await register(name, organization, mobile, email, username, password);
+      console.log(name, mobile, email, username, password);
+      await register(name, mobile, email, username, password);
+      console.log(name, mobile, email, username, password);
       setIsPopupOpen(false);
     } catch (error) {
       console.error('Error during registration:', error);
@@ -149,34 +144,47 @@ const LandingPage = () => {
 
             {isAuthenticated ? (
               <>
-                <div id="profile">
-                  <button
-                    className="profile-button"
-                    onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                  >
-                    {/* {userDetails.name[0]} */}
+                <div
+                  id="profile"
+                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                >
+                  <button className="profile-button">
+                    {userDetails?.name?.[0] || '?'}
                   </button>
-                  {/* <p>Hey {userDetails.name},</p> */}
+                  <p>Hey {userDetails?.name || 'Guest'}</p>
+                  <FontAwesomeIcon icon=" fa-angle-down" id="angle-down" />
                 </div>
                 {profileMenuOpen && userDetails && (
-                  <div className="profile-menu">
-                    <button
+                  <div
+                    className="profile-menu"
+                    onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                  >
+                    {/* <button
                       className="close-popup"
                       onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                     >
                       X
-                    </button>
-                    <p>
-                      <strong>Name:</strong> {userDetails.name}
+                    </button> */}
+                    <p style={{ fontSize: '10px', color: '#007bff' }}>
+                      You are viewing your personal profile
                     </p>
                     <p>
+                      <FontAwesomeIcon
+                        icon="fa-solid fa-user"
+                        id="profile-icon"
+                      />
+                      {userDetails.name}
+                    </p>
+                    {/* <p>
                       <strong>Organization:</strong> {userDetails.organization}
+                    </p> */}
+                    <p>
+                      <FontAwesomeIcon icon="fa-solid fa-envelope" />
+                      {userDetails.email}
                     </p>
                     <p>
-                      <strong>Email:</strong> {userDetails.email}
-                    </p>
-                    <p>
-                      <strong>Contact No:</strong> {userDetails.mobile}
+                      <FontAwesomeIcon icon="fa-solid fa-phone" />
+                      {userDetails.mobile}
                     </p>
                     <button onClick={handleLogout}>Logout</button>
                   </div>
@@ -345,7 +353,7 @@ const LandingPage = () => {
                 <h2>Mobile Number</h2>
                 <input
                   className="login-fields"
-                  type="text"
+                  type="number"
                   id="register-mobile"
                   placeholder="Contact No"
                   required
@@ -381,13 +389,9 @@ const LandingPage = () => {
                 <button
                   className="switch-button"
                   id="register-button"
-                  disabled
                   onClick={() =>
                     handleRegister(
                       document.getElementById('register-name').value,
-                      document.getElementById('event-name').value,
-
-                      document.getElementById('register-organization').value,
                       document.getElementById('register-mobile').value,
                       document.getElementById('register-email').value,
                       document.getElementById('register-username').value,
