@@ -1,12 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
-
 #event-page,
 #sponsor-page {
   background-color: #ffffff;
   min-height: 400vh;
 }
-
-/* Navbar */
 #navbar {
   display: flex;
   justify-content: space-between;
@@ -26,20 +23,16 @@
   position: relative;
   color: black;
   margin-left: 40px;
-  /* margin-top: 0px; */
-  /* padding-top: ; */
 }
 #profile-icon {
   font-size: 25px;
   margin-right: 1%;
 }
-
 #bottom-navbar {
   width: 400px;
   background-color: red;
   position: fixed;
   bottom: 0;
-  /* left: 0; */
   width: 100%;
   background-color: #333;
   display: flex;
@@ -47,16 +40,12 @@
   padding: 10px 0;
   z-index: 5;
 }
-
 #filter-search {
   font-family: 'Inter', sans-serif;
   width: 100%;
-  /* position: sticky;
-  top: 0%; */
   height: 9.9rem;
   background: linear-gradient(#061626 40%, #164170);
 }
-
 #filter {
   display: flex;
   position: sticky;
@@ -80,13 +69,12 @@
   font-weight: bold;
   width: 14%;
   font-size: 20px;
-  /* padding: 0px !important; */
   background: linear-gradient(90deg, #51affe, #0b60f4);
 }
 #filter button:hover {
   background: linear-gradient(90deg, #51affe, #0b60f4);
-  -webkit-background-clip: text; /* Make the background clip to the text */
-  color: transparent; /* Make the text color transparent so the gradient shows through */
+  -webkit-background-clip: text;
+  color: transparent;
   border: 2px solid white;
 }
 #filter button:hover {
@@ -95,8 +83,6 @@
 .filters {
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
-  /* align-items: center; */
   padding-left: 15px;
   width: 15%;
   border-radius: 0.6rem;
@@ -130,7 +116,6 @@ input[type='date'] {
   -moz-appearance: none;
   position: relative;
 }
-
 #result {
   font-size: 25px;
   margin-left: 65px;
@@ -145,7 +130,6 @@ input[type='date'] {
   box-shadow: rgba(17, 12, 46, 0.15) 0px 10px 60px 0px;
   border-bottom: 2px solid #c4d7e6;
 }
-
 .event-card {
   display: flex;
   margin-bottom: 2%;
@@ -156,7 +140,6 @@ input[type='date'] {
   margin-left: 10%;
 }
 .event-card:hover {
-  /* color: #0084ff; */
   border: 1px solid #0084ff;
 }
 #part-1 {
@@ -167,12 +150,11 @@ input[type='date'] {
   border-radius: 5px;
   width: 80%;
   max-width: 800px;
-  height: auto; /* Maintains aspect ratio */
-  overflow: hidden; /* Ensures no overflow */
+  height: auto; 
+  overflow: hidden; 
 }
-
 #event-pic img {
-  width: 100%; /* Image scales to fit the container width */
+  width: 100%; 
   height: auto; /* Maintains the image's aspect ratio */
   display: block; /* Removes extra space below the image */
 }
@@ -281,7 +263,6 @@ input[type='date'] {
 .heart-icon.default {
   color: black;
 }
-
 @keyframes pop {
   0% {
     transform: scale(1);

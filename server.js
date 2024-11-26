@@ -5,6 +5,7 @@ const path = require('path');
 const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 80;
 const pool = mysql.createPool({
@@ -25,6 +26,34 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(express.static(__dirname));
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "C:/Users/Tanubhav Juneja/Desktop/College/5th sem/CSC-501/Event Sponsor Portal/uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); 
+  },
+});
+const upload = multer({ storage: storage });
+const IMAGE_UPLOAD_DIR = path.join(__dirname,"uploads"); 
+app.get("/download_image/:filename", (req, res) => {
+  const { filename } = req.params;
+  const filePath = path.join(IMAGE_UPLOAD_DIR, filename);
+    console.log(filename,filePath);
+    res.download(filePath, filename, (err) => {
+    if (err) {
+      console.error("Error sending the file:", err);
+      if (!res.headersSent) {
+        res.status(404).send("File not found");
+      }
+    }
+  });
+});
+app.post("/upload_image", upload.single("file"), (req, res) => {
+    console.log("Yesss");
+    const filePath = `/download_image/${req.file.filename}`;
+    res.json({ file_path: filePath });
+  })
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'web', 'build', 'index.html'));
 });
@@ -42,7 +71,6 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid username or password' });
         }
         const token = generateToken();
-        console.log(token);
         await promisePool.query('UPDATE users SET token = ? WHERE id = ?', [token, user.id]);
         res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
@@ -140,27 +168,27 @@ app.get('/list_events', async (req, res) => {
         let query = "SELECT * FROM events WHERE 1=1";
         const values = [];
         if (city) {
-            query += " AND city = ?";
+            query += " AND location = ?";
             values.push(city);
         }
         if (footfall) {
             const [minFootfall, maxFootfall] = footfall.split('-');
             if (minFootfall && maxFootfall) {
-                query += " AND expected_crowd BETWEEN ? AND ?";
+                query += " AND footfall BETWEEN ? AND ?";
                 values.push(minFootfall, maxFootfall);
             }
         }
         if (eventDate) {
-            const [startDate, endDate] = eventDate.split('-');
-            if (startDate && endDate) {
-                query += " AND date BETWEEN ? AND ?";
-                values.push(startDate, endDate);
+            if (eventDate) {
+                console.log(eventDate);
+                query += " AND date = ?";
+                values.push(eventDate);
             }
         }
         if (cost) {
             const [minCost, maxCost] = cost.split('-');
             if (minCost && maxCost) {
-                query += " AND budget_requirement BETWEEN ? AND ?";
+                query += " AND budget BETWEEN ? AND ?";
                 values.push(minCost, maxCost);
             }
         }
@@ -224,57 +252,70 @@ app.get('/list_sponsors', async (req, res) => {
     }
 });
 app.post('/add_event', async (req, res) => {
+    const { formData } = req.body;
+    if (!formData) {
+        return res.status(400).json({ error: 'Form data is missing' });
+    }
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-        return res.status(401).json({ message: 'No token provided' });
+      return res.status(401).json({ message: 'No token provided' });
     }
     const token = authHeader.split(' ')[1];
     if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
+      return res.status(401).json({ message: 'No token provided' });
     }
     try {
-        const [userRows] = await promisePool.query('SELECT id FROM users WHERE token = ?', [token]);
-        if (userRows.length === 0) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
-        const userId = userRows[0].id;
-        const { name, organiser, college, budget, date, crowd } = req.body;
-        await promisePool.query(
-            'INSERT INTO events (event_name, event_organizer, college, budget_requirement, date, expected_crowd, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [name, organiser, college, budget, date, crowd, userId]
-        );
-        res.status(201).json({ message: 'Event added successfully' });
+      const [userRows] = await promisePool.query('SELECT id,name FROM users WHERE token = ?', [token]);
+      if (userRows.length === 0) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+      const userId = userRows[0].id;
+      const name = userRows[0].name;
+      const [ college_name, location, organization_name, event_name, date, time, budget, footfall, description, image ] = formData;
+      await promisePool.query(
+        'INSERT INTO events (college, location, organization_name, event_name, event_organizer,date, time, budget, footfall, description,image, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+            college_name,location,organization_name,event_name,name,date,time,budget,footfall,description,image,userId
+        ]
+      );
+      res.status(201).json({ message: 'Event added successfully' });
     } catch (error) {
-        console.error('Database error:', error);
-        res.status(500).json({ message: 'Internal server error' });
+      console.error('Database error:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
-});
+  });
 app.post('/add_sponsor', async (req, res) => {
+    const { formData } = req.body;
+    if (!formData) {
+        return res.status(400).json({ error: 'Form data is missing' });
+    }
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-        return res.status(401).json({ message: 'No token provided' });
+      return res.status(401).json({ message: 'No token provided' });
     }
     const token = authHeader.split(' ')[1];
     if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
+      return res.status(401).json({ message: 'No token provided' });
     }
     try {
-        const [userRows] = await promisePool.query('SELECT id FROM users WHERE token = ?', [token]);
-        if (userRows.length === 0) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
-        const userId = userRows[0].id;
-        const { organization_name, sponsorship_budget, college_tier_requirement, crowd_requirements } = req.body;
-        await promisePool.query(
-            'INSERT INTO sponsors (organization_name, sponsorship_budget, college_tier_requirement, crowd_requirements, created_by) VALUES (?, ?, ?, ?, ?)',
-            [organization_name, sponsorship_budget, college_tier_requirement, crowd_requirements, userId]
-        );
-        res.status(201).json({ message: 'Sponsor added successfully' });
+      const [userRows] = await promisePool.query('SELECT id,name FROM users WHERE token = ?', [token]);
+      if (userRows.length === 0) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+      const userId = userRows[0].id;
+      const [ company_name, location, contact, budget, domain, insta, twitter, other,description, logo ] = formData;
+      await promisePool.query(
+        'INSERT INTO sponsors (company_name, location, contact, domain, insta, twitter, other,description, logo, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+            company_name, location, contact, budget, domain, insta, twitter, other,description, logo,userId
+        ]
+      );
+      res.status(201).json({ message: 'Sponsor added successfully' });
     } catch (error) {
-        console.error('Database error:', error);
-        res.status(500).json({ message: 'Internal server error' });
+      console.error('Database error:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
-});
+  });
 app.post('/rate_sponsor', async (req, res) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {

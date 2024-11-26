@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
 import './style.css';
-import { Link } from 'react-router-dom';
 import FirstPage from '../components/FirstPage';
 import BottomNavbar from '../components/BottomNavbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,23 +27,19 @@ const LandingPage = () => {
         .catch((error) => console.error('Error fetching user details:', error));
     }
   }, [isAuthenticated]);
-
   useEffect(() => {
     function adjustScale() {
-      const scale = window.outerWidth / window.innerWidth; // Calculate zoom level
-      document.body.style.transform = `scale(${1 / scale})`; // Apply inverse scale
-      document.body.style.transformOrigin = '0 0'; // Start scaling from the top left
-      document.body.style.width = `${100 * scale}%`; // Adjust width to prevent content overflow
+      const scale = window.outerWidth / window.innerWidth; 
+      document.body.style.transform = `scale(${1 / scale})`; 
+      document.body.style.transformOrigin = '0 0';
+      document.body.style.width = `${100 * scale}%`; 
     }
-
-    window.addEventListener('resize', adjustScale); // Adjust scale on window resize
-    adjustScale(); // Initial call on mount
-
+    window.addEventListener('resize', adjustScale); 
+    adjustScale();
     return () => {
-      window.removeEventListener('resize', adjustScale); // Cleanup event listener on unmount
+      window.removeEventListener('resize', adjustScale); 
     };
   }, []);
-
   const handlePopupToggle = (type) => {
     const content = document.getElementById('popup-content');
     if (isPopupOpen) {
@@ -86,39 +81,24 @@ const LandingPage = () => {
       console.error('Error during logout:', error);
     }
   };
-
-  // Select all elements with the 'container' class
   const containers = document.querySelectorAll('.sponsor-event-box');
   const sponsorDetails = document.getElementById('sponser-details');
   const eventDetails = document.getElementById('event-details');
-
-  // Add click event listener to each container
   containers.forEach((container) => {
     container.addEventListener('click', () => {
-      // Remove 'active' class from all containers
       containers.forEach((cont) => cont.classList.remove('active'));
-
-      // Add 'active' class to the clicked container
       container.classList.add('active');
     });
   });
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  // Function to handle changes in username input
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
-
-  // Function to handle changes in password input
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
-
-  // Check if the Login button should be enabled
   const isLoginEnabled = username.length > 0 && password.length >= 8;
-
   function checkFormCompletion() {
     const fields = [
       document.getElementById('register-name').value,
@@ -128,20 +108,119 @@ const LandingPage = () => {
       document.getElementById('register-password').value,
     ];
     let allFieldsFilled = false;
-
     allFieldsFilled = fields.every((field) => field.trim() !== '');
     console.log(allFieldsFilled);
     document.getElementById('register-button').disabled = !allFieldsFilled;
   }
+  const handleRegisterSubmit = () => {
+    const form0 = JSON.parse(localStorage.getItem('form_0')) || {};
+    const form1 = JSON.parse(localStorage.getItem('form_1')) || {};
+    const form2 = JSON.parse(localStorage.getItem('form_2')) || {};
+    const isForm0Complete = form0.college_name && form0.location && form0.organization_name;
+    const isForm1Complete = form1.event_name && form1.date && form1.time && form1.budget && form1.footfall;
+    const isForm2Complete = form2.description;
+    if (isForm0Complete && isForm1Complete && isForm2Complete) {
+      submiteventForms(form0, form1, form2);
+      localStorage.removeItem('form_0');
+      localStorage.removeItem('form_1');
+      localStorage.removeItem('form_2');
+      return;
+    }
+    const form3 = JSON.parse(localStorage.getItem('form_3')) || {};
+    const form4 = JSON.parse(localStorage.getItem('form_4')) || {};
+    const form5 = JSON.parse(localStorage.getItem('form_5')) || {};
+    const isForm3Complete = form3.company_name && form3.location && form3.contact;
+    const isForm4Complete = form4.domain && form4.insta && form4.twitter;
+    const isForm5Complete = form5.other && form5.logo;
+    if (isForm3Complete && isForm4Complete && isForm5Complete) {
+      submitsponsorForms(form3, form4, form5);
+      localStorage.removeItem('form_3');
+      localStorage.removeItem('form_4');
+      localStorage.removeItem('form_5');
+      return;
+    }
+    alert("Forms are incomplete. Please complete all required forms.");
+  };
+  const submiteventForms = (form0,form1,form2) => {
+    console.log(form0,form2,form1);
+    const token = localStorage.getItem("token");
+    const { college_name, location, organization_name } = form0; 
+    const { event_name, date, time, budget, footfall } = form1;           
+    const { description } = form2;
+    const image=localStorage.getItem("logo");
+    console.log(image);
+    const formData = [
+      college_name,
+      location,
+      organization_name,
+      event_name,
+      date,
+      time,
+      budget,
+      footfall,
+      description,
+      image
+  ];
+  console.log('Form Data List:', formData);
+    fetch("/add_event", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({ formData }), 
+    })
+      .then((response) => {
+        if (response.ok) {
+          window.location.href='/sponsors';
+          alert("Event submitted successfully!");
+        } else {
+          alert("Failed to submit event. Please try again.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("An error occurred while submitting the event.");
+      });
+  };
+  const submitsponsorForms = (form3,form4,form5) => {
+    console.log(form3,form4,form5);
+    const token = localStorage.getItem("token");
+    const { company_name, location, contact, budget, domain } = form3; 
+    const { insta,twitter,other } = form4;           
+    const { description } = form5;
+    const logo=localStorage.getItem("logo");
+    const formData = [company_name, location, contact, budget, domain,insta,twitter,other,description,logo ];
+    console.log(formData);
+  console.log('Form Data List:', formData);
+    fetch("/add_sponsor", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({ formData }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          window.location.href='/events';
+          clearForms(form3,form4,form5);
+          alert("Sponsorship submitted successfully!");
+        } else {
+          alert("Failed to submit event. Please try again.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("An error occurred while submitting the event.");
+      });
+  };
   return (
     <>
       <section id="overlay1">
         <header>
           <h2>BridgeUp</h2>
           <nav className="navbar">
-            {/* <Link to="/events">Events</Link>
-            <Link to="/sponsors">Sponsors</Link> */}
-
             {isAuthenticated ? (
               <>
                 <div
@@ -159,12 +238,6 @@ const LandingPage = () => {
                     className="profile-menu"
                     onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                   >
-                    {/* <button
-                      className="close-popup"
-                      onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                    >
-                      X
-                    </button> */}
                     <p style={{ fontSize: '10px', color: '#007bff' }}>
                       You are viewing your personal profile
                     </p>
@@ -175,9 +248,6 @@ const LandingPage = () => {
                       />
                       {userDetails.name}
                     </p>
-                    {/* <p>
-                      <strong>Organization:</strong> {userDetails.organization}
-                    </p> */}
                     <p>
                       <FontAwesomeIcon icon="fa-solid fa-envelope" />
                       {userDetails.email}
@@ -203,53 +273,22 @@ const LandingPage = () => {
                 />
               </button>
             )}
-
-            {/* <button
-              className="button-grad"
-              onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-            >
-              Login or Create Account ⌵
-            </button> */}
           </nav>
-          {/* {isAuthenticated ? (
-          <>
-            <button className="profile-button" onClick={() => setProfileMenuOpen(!profileMenuOpen)}>
-              Profile
-            </button>
-            {profileMenuOpen && userDetails && (
-              <div className="profile-menu">
-                <button className="close-popup" onClick={() => setProfileMenuOpen(!profileMenuOpen)}>X</button>
-                <p><strong>Name:</strong> {userDetails.name}</p>
-                <p><strong>Organization:</strong> {userDetails.organization}</p>
-                <p><strong>Email:</strong> {userDetails.email}</p>
-                <p><strong>Contact No:</strong> {userDetails.mobile}</p>
-                <button onClick={handleLogout}>Logout</button>
-              </div>
-            )}
-          </>
-        ) : (
-          <button onClick={() => handlePopupToggle('login')}>Login / Register</button>
-        )} */}
         </header>
         <div id="overlay2"></div>
-
         <FirstPage />
-
-        <button className="button-grad bt2">
+        <button className="button-grad bt2" onClick={handleRegisterSubmit}>
           REGISTER YOURSELF FOR VERIFICATION
         </button>
       </section>
-
       <div id="sec2">
         <h1 className="sec-heading">For Sponsors</h1>
         <p className="sec-subheading">how sponsors can use the app?</p>
       </div>
-
       <div id="sec3">
         <h1 className="sec-heading">For Event managers</h1>
         <p className="sec-subheading">how event managers can use the app?</p>
       </div>
-
       {isPopupOpen && (
         <div className="popup">
           <div className="popup-content" id="popup-content">
@@ -336,20 +375,6 @@ const LandingPage = () => {
                   required
                   onInput={checkFormCompletion}
                 />
-                {/* <input
-                  className="login-fields"
-                  type="text"
-                  id="register-organization"
-                  placeholder="Organization"
-                  required
-                />
-                <input
-                  className="login-fields"
-                  type="text"
-                  id="event-name"
-                  placeholder="Event Name"
-                  required
-                /> */}
                 <h2>Mobile Number</h2>
                 <input
                   className="login-fields"
@@ -412,8 +437,6 @@ const LandingPage = () => {
           </div>
         </div>
       )}
-
-      {/* <BottomNavbar /> */}
     </>
   );
 };

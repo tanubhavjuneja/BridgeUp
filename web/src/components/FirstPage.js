@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import './components-style.css';
-import DateRangePicker from './DateRangePicker';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 export default function FirstPage() {
-  // Array of tabs with unique content for each tab
   const tabs = [
     {
       id: 'event',
@@ -13,13 +10,6 @@ export default function FirstPage() {
         <div id="event-details">
           <div className="info-container" onClick={() => handleClick(0)}>
             <h2 className="details"> About Your Company/College</h2>
-            {/* <input
-              className="input-tags"
-              type="text"
-              id="register-organization"
-              placeholder="Organization"
-              required
-            /> */}
             <FontAwesomeIcon
               icon="fa-solid fa-circle-check fa-3x"
               className="circle-check target"
@@ -28,13 +18,6 @@ export default function FirstPage() {
           </div>
           <div className="info-container" onClick={() => handleClick(1)}>
             <h2 className="details">About Your Event</h2>
-            {/* <input
-              className="input-tags"
-              type="text"
-              id="event-name"
-              placeholder="Event Name"
-              required
-            /> */}
             <FontAwesomeIcon
               icon="fa-solid fa-circle-check fa-3x"
               className="circle-check target"
@@ -43,9 +26,6 @@ export default function FirstPage() {
           </div>
           <div className="info-container" onClick={() => handleClick(2)}>
             <h2 className="details">Images</h2>
-            {/* <DateRangePicker /> */}
-            {/* 
-            <input className="input-tags" type="date" name="Date" id="date" /> */}
             <FontAwesomeIcon
               icon="fa-solid fa-circle-check fa-3x"
               className="circle-check target"
@@ -62,13 +42,6 @@ export default function FirstPage() {
         <div id="sponsor-details">
           <div className="info-container" onClick={() => handleClick(3)}>
             <h2 className="details">Your Company Name</h2>
-            {/* <input
-              className="input-tags"
-              type="text"
-              id="register-organization"
-              placeholder="Organization"
-              required
-            /> */}
             <FontAwesomeIcon
               icon="fa-solid fa-circle-check fa-3x"
               className="circle-check target"
@@ -79,13 +52,6 @@ export default function FirstPage() {
             <h2 className="details">
               Your Instagram (or any other social profiles)
             </h2>
-            {/* <input
-              className="input-tags"
-              type="text"
-              id="event-name"
-              placeholder="Event Name"
-              required
-            /> */}
             <FontAwesomeIcon
               icon="fa-solid fa-circle-check fa-3x"
               className="circle-check target"
@@ -104,57 +70,79 @@ export default function FirstPage() {
       ),
     },
   ];
-
-  // State to track the active tab's ID and its content
   const [activeTabId, setActiveTabId] = useState('event');
-
-  // Find content for the active tab
-  const activeContent = tabs.find((tab) => tab.id === activeTabId)?.content;
-
-  let infoCont = document.getElementsByClassName('info-container');
-  let formCont = document.getElementsByClassName('form-container');
-  //let overlay = document.getElementById('overlay2');
-
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+  
+        const response = await fetch("/upload_image", {
+          method: "POST",
+          body: formData,
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+  
+        const result = await response.json();
+        if (result.file_path) {
+          localStorage.setItem("logo", result.file_path);
+          console.log(localStorage.getItem("logo"));
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+  };  
   const [visibleDivIndex, setVisibleDivIndex] = useState(8);
-
-  // Handler to display the corresponding "b" div when an "a" div is clicked
+  const clearForms = () => {
+    setVisibleDivIndex(null);
+    const formKeys = Object.keys(localStorage).filter((key) => key.startsWith('form_'));
+    formKeys.forEach((key) => localStorage.removeItem(key));
+    const forms = document.querySelectorAll('.form-field input, .form-field textarea');
+    forms.forEach((field) => {
+      field.value = '';
+    });
+  };
   const handleClick = (index) => {
-    setVisibleDivIndex(index); // Set the index of the clicked "a" div
-    //overlay.style.zIndex = '99';
+    setVisibleDivIndex(index); 
   };
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevents page reload on form submission
-    setVisibleDivIndex(null); // Hide the visible "b" div after form submission
-    //overlay.style.zIndex = '2';
+  const handleSubmit = (e, formIndex) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const formObject = {};
+    formData.forEach((value, key) => {
+      formObject[key] = value;
+    });
+    localStorage.setItem(`form_${formIndex}`, JSON.stringify(formObject));
+    setVisibleDivIndex(null);
   };
-
-  // Function to handle closing the popup
   const handleClosePopup = () => {
     setVisibleDivIndex(null);
-    //overlay.style.zIndex = '2';
   };
-
   return (
     <>
       <div id="upper-one">
         {tabs.map((tab) => (
           <div
             key={tab.id}
-            onClick={() => setActiveTabId(tab.id)}
-            className={`sponsor-event-box ${
-              activeTabId === tab.id ? 'active' : 'inactive'
-            }`}
+            onClick={() => {
+              clearForms();
+              setActiveTabId(tab.id);
+            }}
+            className={`sponsor-event-box ${activeTabId === tab.id ? 'active' : 'inactive'}`}
           >
             {tab.label}
           </div>
         ))}
       </div>
-
-      {/* Content display area */}
       <div id="bottom-one" className="hero-divs">
-        {activeContent}
+        {tabs.find((tab) => tab.id === activeTabId)?.content}
       </div>
-
       <div
         className="form-container"
         id="form1"
@@ -179,7 +167,6 @@ export default function FirstPage() {
             />
             <label for="name">Company/College Name</label>
           </div>
-
           <div class="form-field">
             <input
               type="text"
@@ -190,35 +177,21 @@ export default function FirstPage() {
             />
             <label for="location">Location</label>
           </div>
-
           <div class="form-field">
             <input
               type="text"
-              id="soc_name"
-              name="soc_name"
+              id="organization_name"
+              name="organization_name"
               required
               placeholder=" "
             />
             <label for="soc_name">Society/Organizer Name</label>
           </div>
-
-          {/* <div class="form-field">
-            <textarea
-              id="message"
-              name="Description"
-              rows="4"
-              required
-              placeholder=" "
-            ></textarea>
-            <label for="message">Message</label>
-          </div> */}
-
           <button type="submit" class="submit-btn">
             <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
           </button>
         </form>
       </div>
-
       <div
         className="form-container"
         id="form2"
@@ -243,56 +216,39 @@ export default function FirstPage() {
             />
             <label for="event_name">Event Name</label>
           </div>
-
           <div class="form-field">
-            <input type="date" id="Date" name="Date" required placeholder=" " />
-            <label for="Date">Date</label>
+            <input type="date" id="date" name="date" required placeholder=" " />
+            <label for="date">Date</label>
           </div>
-
           <div class="form-field">
-            <input type="time" id="Time" name="Time" required placeholder=" " />
-            <label for="Time">Time</label>
+            <input type="time" id="time" name="time" required placeholder=" " />
+            <label for="time">Time</label>
           </div>
-
           <div class="form-field">
             <input
-              type="number"
-              id="Budget"
-              name="Budget"
+              type="text"
+              id="budget"
+              name="budget"
               required
               placeholder=" "
             />
-            <label for="Budget">Budget</label>
+            <label for="budget">Budget</label>
           </div>
-
           <div class="form-field">
             <input
-              type="number"
-              id="Footfall"
-              name="Footfall"
+              type="text"
+              id="footfall"
+              name="footfall"
               required
               placeholder=" "
             />
-            <label for="Footfall">Footfall</label>
+            <label for="footfall">Footfall</label>
           </div>
-
-          {/* <div class="form-field">
-            <textarea
-              id="message"
-              name="Description"
-              rows="4"
-              required
-              placeholder=" "
-            ></textarea>
-            <label for="message">Message</label>
-          </div> */}
-
           <button type="submit" class="submit-btn">
             Submit
           </button>
         </form>
       </div>
-
       <div
         className="form-container"
         id="form3"
@@ -309,23 +265,27 @@ export default function FirstPage() {
         <form onSubmit={(e) => handleSubmit(e, 2)}>
           <div class="form-field">
             <textarea
-              id="Description"
-              name="Description"
+              id="description"
+              name="description"
               rows="4"
               required
               placeholder=" "
             ></textarea>
             <label for="Description">Description</label>
+            <input type="file"
+              id="image"
+              name="image"
+              rows="4"
+              onChange={handleImageChange}
+              required
+            ></input>
+            <label for="image">Image</label>
           </div>
-
           <button type="submit" class="submit-btn">
             Submit
           </button>
         </form>
       </div>
-
-      {/* For sponsors */}
-
       <div
         className="form-container"
         id="form1"
@@ -353,8 +313,8 @@ export default function FirstPage() {
           <div class="form-field">
             <input
               type="text"
-              id="Location-Address"
-              name="Location-Address"
+              id="location"
+              name="location"
               required
               placeholder=" "
             />
@@ -362,17 +322,17 @@ export default function FirstPage() {
           </div>
           <div class="form-field">
             <input
-              type="number"
-              id="contact-no"
-              name="contact-no"
+              type="text"
+              id="contact"
+              name="contact"
               required
               placeholder=" "
             />
-            <label for="contact-no">Contact no(for whatsapp)</label>
+            <label for="contact_no">Contact no(for whatsapp)</label>
           </div>
           <div class="form-field">
             <input
-              type="number"
+              type="text"
               id="budget"
               name="budget"
               required
@@ -390,13 +350,11 @@ export default function FirstPage() {
             />
             <label for="domain">Domain</label>
           </div>
-
           <button type="submit" class="submit-btn">
             Submit
           </button>
         </form>
       </div>
-
       <div
         className="form-container"
         id="form2"
@@ -429,13 +387,11 @@ export default function FirstPage() {
             <input type="text" id="other" name="other" placeholder=" " />
             <label for="other">Others</label>
           </div>
-
           <button type="submit" class="submit-btn">
             Submit
           </button>
         </form>
       </div>
-
       <div
         className="form-container"
         id="form3"
@@ -451,16 +407,23 @@ export default function FirstPage() {
         />
         <form onSubmit={(e) => handleSubmit(e, 5)}>
           <div class="form-field">
-            <textarea
-              id="logo"
-              name="logo"
+          <textarea
+              id="description"
+              name="description"
               rows="4"
               required
               placeholder=" "
             ></textarea>
+            <label for="description">Description</label>
+            <input type="file"
+              id="logo"
+              name="logo"
+              rows="4"
+              onChange={handleImageChange}
+              required
+            ></input>
             <label for="logo">Logo</label>
           </div>
-
           <button type="submit" class="submit-btn">
             Submit
           </button>
