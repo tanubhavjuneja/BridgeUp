@@ -199,7 +199,6 @@ app.get('/list_events', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-
 app.get('/event/:id', async (req, res) => {
     const eventId = req.params.id;
     try {
@@ -242,15 +241,26 @@ app.get('/sponsor/:id', async (req, res) => {
     }
 });
 app.get('/list_sponsors', async (req, res) => {
+    const { city, domain } = req.query;
+    console.log("/list_sponsors", city, domain);
     try {
-        const [rows] = await promisePool.query('SELECT * FROM sponsors');
-        res.json(rows);
-        console.log(rows);
+      let query = "SELECT * FROM sponsors WHERE 1=1";
+      const values = [];
+      if (city) {
+        query += " AND location = ?";
+        values.push(city);
+      }
+      if (domain) {
+        query += " AND domain = ?";
+        values.push(domain);
+      }
+      const [sponsors] = await promisePool.query(query, values);
+      res.json(sponsors);
     } catch (error) {
-        console.error('Database error:', error);
-        res.status(500).json({ message: 'Internal server error' });
+      console.error('Error fetching sponsors:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
-});
+}); 
 app.post('/add_event', async (req, res) => {
     const { formData } = req.body;
     if (!formData) {
