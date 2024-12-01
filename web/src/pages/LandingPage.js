@@ -129,9 +129,10 @@ const LandingPage = () => {
     const form3 = JSON.parse(localStorage.getItem('form_3')) || {};
     const form4 = JSON.parse(localStorage.getItem('form_4')) || {};
     const form5 = JSON.parse(localStorage.getItem('form_5')) || {};
-    const isForm3Complete = form3.company_name && form3.location && form3.contact;
-    const isForm4Complete = form4.domain && form4.insta && form4.twitter;
-    const isForm5Complete = form5.other && form5.logo;
+    console.log(form3,form4,form5);
+    const isForm3Complete = form3.company_name && form3.location && form3.contact && form3.budget && form3.domain;
+    const isForm4Complete = form4.insta && form4.twitter && form4.other;
+    const isForm5Complete = form5.description;
     if (isForm3Complete && isForm4Complete && isForm5Complete) {
       submitsponsorForms(form3, form4, form5);
       localStorage.removeItem('form_3');
@@ -139,6 +140,7 @@ const LandingPage = () => {
       localStorage.removeItem('form_5');
       return;
     }
+    console.log(isForm0Complete,isForm1Complete,isForm2Complete,isForm3Complete,isForm4Complete,isForm5Complete);
     alert("Forms are incomplete. Please complete all required forms.");
   };
   const submiteventForms = (form0,form1,form2) => {
@@ -204,7 +206,6 @@ const LandingPage = () => {
       .then((response) => {
         if (response.ok) {
           window.location.href='/events';
-          clearForms(form3,form4,form5);
           alert("Sponsorship submitted successfully!");
         } else {
           alert("Failed to submit event. Please try again.");
