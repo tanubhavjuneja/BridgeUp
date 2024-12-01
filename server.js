@@ -313,11 +313,12 @@ app.post('/add_sponsor', async (req, res) => {
         return res.status(401).json({ message: 'Unauthorized' });
       }
       const userId = userRows[0].id;
+      const name = userRows[0].name;
       const [ company_name, location, contact, budget, domain, insta, twitter, other,description, logo ] = formData;
       await promisePool.query(
-        'INSERT INTO sponsors (company_name, location, contact, domain, insta, twitter, other,description, logo, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO sponsors (company_name, location, contact,budget, domain, insta, twitter, other,description, logo, created_by) VALUES (?, ?, ? , ?, ?, ?, ?, ?, ?, ?, ?)',
         [
-            company_name, location, contact, budget, domain, insta, twitter, other,description, logo,userId
+            company_name, location, contact, budget, domain, insta, twitter, other,description, logo, name
         ]
       );
       res.status(201).json({ message: 'Sponsor added successfully' });
