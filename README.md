@@ -1,17 +1,27 @@
-# Event and Sponsor Management Platform
 
-This web application allows users to manage events and sponsors. It features user registration, event listings, sponsor details, and ticket purchasing. The frontend is built using React, and the backend is powered by Express.js.
+Memory updated
+Here’s a simpler README for your project:
 
-## Features
+Event Sponsorship Portal
+This platform connects event organizers with sponsors to help fund and support events happening in the city. Sponsors can browse through various events and offer funding, while event organizers can find sponsors who are interested in supporting their events.
 
-- **User Authentication**: Register and log in to manage your profile.
-- **Event Management**: View events, see details, and add new events.
-- **Sponsor Management**: View sponsor information and add new sponsors.
-- **Ticket Purchasing**: Buy tickets for events with quantity selection.
-- **Profile Management**: After logging in, users can view and update their profile.
+Features
+For Sponsors:
 
-## Key Pages
-- Login/Registration: Users can log in or create a new account.
-- Events Page: Users can view a list of events and their details.
-- Sponsors Page: Users can view and add sponsor information.
-- Profile: After logging in, users can view and update their profile.
+Browse through events happening in the city.
+Explore event details like budget requirements, expected crowd, and more.
+Contact event organizers directly to offer sponsorship.
+For Event Organizers:
+
+List events on the platform to attract sponsors.
+Set event details like budget, crowd size, and sponsorship requirements.
+Communicate with potential sponsors through the platform.
+How It Works
+Sponsors sign up and create profiles with details like their company name and contact information. They can then search for events that fit their budget and interests.
+
+Event Organizers create and manage their events, setting requirements for sponsorship. They can browse through available sponsors and reach out for potential partnerships.
+
+Technologies Used
+Frontend: Built using React to provide an interactive and responsive user experience.
+Backend: A server-side component (Node.js or Python) handles the event and sponsor data, authentication, and communication between organizers and sponsors.
+Database: MySQL stores user profiles, event details, and sponsor information.
