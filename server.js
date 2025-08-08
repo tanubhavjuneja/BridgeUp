@@ -9,7 +9,7 @@ const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 80;
 const pool = mysql.createPool({
-    host: 'localhost',
+    host: '${MYSQL_CONFIG_1}',
     user: 'root',
     password: 'idkthepassword',
     database: 'event',
@@ -357,5 +357,5 @@ app.post('/rate_sponsor', async (req, res) => {
     }
 });
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://${MYSQL_CONFIG_1}:${PORT}`);
 });
